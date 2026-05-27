@@ -4,6 +4,28 @@ All notable changes to WaboSign are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] — 2026-05-27
+
+Upstream sync with DocuSeal 3.0.1. Functional improvements to image handling and security.
+
+### Added
+- Image-to-JPEG conversion on upload: opaque images are now converted to JPEG before embedding, reducing document sizes. Alpha-channel (transparent) images remain PNG. Applies to both template uploads and result attachment generation.
+
+### Security
+- Security headers added to all responses.
+- Dangerous file extensions are now rejected on upload.
+
+### Changed
+- Sync upstream DocuSeal 3.0.1 (17 commits). See [wabosign-synced-with-3.0.1](https://github.com/wabolabs/wabosign/commit/dca4a705) for the merge commit.
+- Template upload field now uses the upstream `<convert-upload>` custom element (replaces `<submit-form>` wrapper).
+- Editor nodes are now isolated.
+- Gem updates (see Gemfile.lock diff).
+
+### Notes
+- Released image: `ghcr.io/wabolabs/wabosign:1.4.0` (also tagged `:latest`).
+
+[1.4.0]: https://github.com/wabolabs/wabosign/releases/tag/1.4.0
+
 ## [1.3.2] — 2026-05-20
 
 CI green-up patch. No functional or security changes.
