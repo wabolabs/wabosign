@@ -4,6 +4,29 @@ All notable changes to WaboSign are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] — 2026-06-05
+
+Fork-hardening and security release. Consolidates the upstream-merge guardrails
+onto `master` and clears the outstanding Dependabot alerts. (Supersedes the
+divergent, never-documented `1.4.0` sync line.)
+
+### Security
+- Bumped dependencies to clear 21 of 24 open Dependabot alerts (11 of 12 highs), including the only browser-shipped runtime package (`uuid` 9 → 11.1.1) and the Babel build chain (→ 7.29.x). The remaining 3 are unreachable or unfixable without breaking tooling (a transitive `vue` 2 inside a third-party widget, the glob CLI-only advisory, and eslint's ajv 6). Verified by compiling the container `webpack` stage. See [package.json](package.json).
+
+### Added
+- **Fork-invariants CI guard** ([bin/fork-check](bin/fork-check) + [config/fork_invariants.yml](config/fork_invariants.yml)) — fails the build if an upstream merge re-introduces a Pro gate, deletes fork code, overwrites a brand asset, or drops AGPL §7(b) attribution. The executable form of the post-merge checklist.
+- **Brand-asset checksum baseline** and **`bin/sync-upstream` gates** to make upstream merges safe and repeatable.
+- **Push guard against the fork parent** — [.githooks/pre-push](.githooks/pre-push) + [bin/install-push-guard](bin/install-push-guard) refuse pushes to `docusealco/*` (wired in via [bin/setup](bin/setup)), so an accidental `git push upstream` can't open a branch/PR on the upstream repo.
+
+### Changed
+- **Release images now publish to GHCR**, matching the documentation. [.github/workflows/docker.yml](.github/workflows/docker.yml) builds `linux/amd64` + `linux/arm64` and pushes the `MAJOR.MINOR.PATCH` tag plus `:latest` to `ghcr.io/wabolabs/wabosign` (previously Docker Hub, inherited un-rebranded from upstream). A fork invariant now keeps the registry on GHCR across upstream syncs.
+- Made the DocuSeal fork relationship explicit in the UI and email attribution.
+
+### Notes
+- Released image: `ghcr.io/wabolabs/wabosign:1.5.0` (also tagged `:latest`).
+
+[1.5.0]: https://github.com/wabolabs/wabosign/releases/tag/1.5.0
+
 ## [1.3.2] — 2026-05-20
 
 CI green-up patch. No functional or security changes.

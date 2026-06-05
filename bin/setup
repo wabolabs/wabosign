@@ -13,7 +13,12 @@ FileUtils.chdir APP_ROOT do
   # This script is idempotent, so that you can run it at any time and get an expectable outcome.
   # Add necessary setup steps to this file.
 
-  puts "== Installing dependencies =="
+  puts "== Installing fork push guard =="
+  # Routes git hooks through the tracked .githooks/ dir and blocks accidental
+  # pushes to the fork parent (see bin/install-push-guard and closed PR #687).
+  system! "bin/install-push-guard"
+
+  puts "\n== Installing dependencies =="
   system("bundle check") || system!("bundle install")
 
   # puts "\n== Copying sample files =="

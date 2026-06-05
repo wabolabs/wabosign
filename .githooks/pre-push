@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+#
+# Repo-tracked guard. Activated by `git config core.hooksPath .githooks`
+# (done by bin/setup). Refuses any push whose destination URL belongs to the
+# upstream DocuSeal org.
+#
+# WaboSign is a public hard fork of docusealco/docuseal. Pushing a branch there
+# creates an unwanted branch/PR on the upstream project (see closed PR #687).
+# This blocks that at the git layer, regardless of which remote name is used.
+#
+# git args:  $1 = remote name   $2 = remote URL
+#
+# To intentionally allow a single push (you almost never want this):
+#   WABOSIGN_ALLOW_UPSTREAM_PUSH=1 git push <remote> <ref>
+
+remote_name="$1"
+remote_url="$2"
+
+if [ "${WABOSIGN_ALLOW_UPSTREAM_PUSH:-}" = "1" ]; then
+  exit 0
+fi
+
+# Matches both https://github.com/docusealco/... and git@github.com:docusealco/...
+case "$remote_url" in
+  *docusealco/*)
+    echo "" >&2
+    echo "  pre-push BLOCKED: remote '$remote_name' targets the upstream repo:" >&2
+    echo "    $remote_url" >&2
+    echo "" >&2
+    echo "  WaboSign is a public fork — pushing here opens an unwanted branch/PR on" >&2
+    echo "  docusealco/docuseal. Push to your own fork instead:" >&2
+    echo "" >&2
+    echo "    git push origin <branch>" >&2
+    echo "" >&2
+    echo "  (Deliberate override: WABOSIGN_ALLOW_UPSTREAM_PUSH=1 git push ...)" >&2
+    echo "" >&2
+    exit 1
+    ;;
+esac
+
+exit 0

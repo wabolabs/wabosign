@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+#
+# bin/install-push-guard — installs the local fork push guard. Idempotent;
+# run by bin/setup and safe to re-run anytime.
+#
+#   - Routes git hooks through the tracked .githooks/ dir, whose pre-push hook
+#     refuses pushes to the upstream docusealco org (see closed PR #687).
+#   - If an `upstream` remote points at the fork parent, disables its push URL
+#     so an accidental `git push upstream` can't reach it even with --no-verify.
+
+cd "$(dirname "$0")/.."
+
+git config core.hooksPath .githooks
+echo "install-push-guard: git hooks routed through .githooks/"
+
+if push_url="$(git remote get-url --push upstream 2>/dev/null)"; then
+  case "$push_url" in
+    *docusealco/*)
+      git remote set-url --push upstream DISABLED-push-to-origin-not-upstream
+      echo "install-push-guard: disabled push to the upstream remote"
+      ;;
+  esac
+fi
