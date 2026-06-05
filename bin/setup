@@ -13,18 +13,10 @@ FileUtils.chdir APP_ROOT do
   # This script is idempotent, so that you can run it at any time and get an expectable outcome.
   # Add necessary setup steps to this file.
 
-  puts "== Installing fork push guards =="
-  # WaboSign is a public fork of docusealco/docuseal. Route git hooks through the
-  # tracked .githooks/ dir (pre-push refuses pushes to the upstream org) and
-  # neutralize the upstream remote's push URL, so an accidental `git push upstream`
-  # can't open a branch/PR on the upstream repo (see closed PR #687).
-  system! "git", "config", "core.hooksPath", ".githooks"
-  if system("git remote get-url --push upstream > /dev/null 2>&1")
-    push_url = `git remote get-url --push upstream`.strip
-    if push_url.include?("docusealco")
-      system! "git", "remote", "set-url", "--push", "upstream", "DISABLED-push-to-origin-not-upstream"
-    end
-  end
+  puts "== Installing fork push guard =="
+  # Routes git hooks through the tracked .githooks/ dir and blocks accidental
+  # pushes to the fork parent (see bin/install-push-guard and closed PR #687).
+  system! "bin/install-push-guard"
 
   puts "\n== Installing dependencies =="
   system("bundle check") || system!("bundle install")
