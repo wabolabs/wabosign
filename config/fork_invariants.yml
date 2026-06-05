@@ -83,6 +83,12 @@ must_contain:
     marker: "module WaboSign"
     why: "Rails app module must be the rebranded WaboSign, not DocuSeal."
 
+  # --- Release publishing target (WaboSign uses GHCR, upstream uses Docker Hub) ---
+  - path: .github/workflows/docker.yml
+    marker_all: ["ghcr.io/wabolabs/wabosign", "registry: ghcr.io"]
+    why: "Release images publish to GHCR (WaboSign convention). Upstream's workflow
+          publishes to Docker Hub; a sync must not regress the registry to docker.io."
+
   # --- SDK embedding contract (intentionally keeps the docuseal-* names) ---
   - path: app/views/templates/_embedding.html.erb
     marker: "docuseal-form"
@@ -105,6 +111,10 @@ must_not_contain:
     marker: "Wabosign.multitenant?"
     why: "Re-added reminder-duration gate (hid one_hour/two_hours unless multitenant).
           multitenant? is legitimate in ~19 OTHER views, so this ban is scoped here."
+  - path: .github/workflows/docker.yml
+    marker_any: ["DOCKERHUB_TOKEN", "DOCKERHUB_USERNAME", "Login to Docker Hub"]
+    why: "Upstream publishes release images to Docker Hub via DOCKERHUB_* secrets.
+          WaboSign uses GHCR; a sync re-introducing Docker Hub login must fail the build."
 
 # ---------------------------------------------------------------------------
 # Markers safe to ban across the whole tree (genuinely unique to a removed

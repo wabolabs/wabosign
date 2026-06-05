@@ -43,7 +43,7 @@ Scope: ~183 files modified. Decisions were made in a planning conversation befor
 - [Dockerfile](Dockerfile): user, group, home directory, and workdir renamed `docuseal` → `wabosign`
 - [docker-compose.yml](docker-compose.yml): image, volume, and Postgres DB name → `ghcr.io/wabolabs/wabosign` / `wabosign`
 - [config/database.yml](config/database.yml): dev/test DB names → `wabosign_dev` / `wabosign_test`
-- [.github/workflows/ci.yml](.github/workflows/ci.yml) and [.github/workflows/docker.yml](.github/workflows/docker.yml): image name and test DB renamed
+- [.github/workflows/ci.yml](.github/workflows/ci.yml) and [.github/workflows/docker.yml](.github/workflows/docker.yml): image name and test DB renamed. **Release publishing target is GHCR, not Docker Hub** — upstream's `docker.yml` pushes to Docker Hub via `DOCKERHUB_*` secrets; WaboSign has always published to `ghcr.io/wabolabs/wabosign`. This lives in `.github/`, which `bin/rebrand-sync` deliberately skips, so the registry choice is enforced by a fork invariant (`must_contain ghcr.io` / `must_not_contain DOCKERHUB_*` on `docker.yml`) instead of the sweep — a sync that re-introduces Docker Hub fails `bin/fork-check`.
 - `docuseal.env` config file path → `wabosign.env` in [config/dotenv.rb](config/dotenv.rb)
 - DOM IDs and localStorage keys renamed `docuseal_*` → `wabosign_*` across [app/javascript/template_builder/](app/javascript/template_builder/)
 - Webhook `USER_AGENT` and corresponding spec assertions updated
