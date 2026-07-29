@@ -38,3 +38,7 @@ yarn-debug.log*
 /ee
 dump.rdb
 *.onnx
+
+# Runtime lock files / local dev state — machine-specific, not source
+.claude/scheduled_tasks.lock
+pg_data/
