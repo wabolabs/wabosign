@@ -12,8 +12,8 @@ module Mcp
       render_result(
         protocolVersion: '2025-11-25',
         serverInfo: {
-          name: 'DocuSeal',
-          version: Docuseal.version.to_s
+          name: 'WaboSign',
+          version: Wabosign.version.to_s
         },
         capabilities: {
           tools: {

@@ -145,7 +145,7 @@ class ProcessSubmitterCompletionJob
   def enqueue_bcc_completed_emails(submitter, user, is_sent_to_user)
     bcc_addresses = build_bcc_addresses(submitter.submission)
 
-    raise TooManyBcc, submitter.account_id if Docuseal.multitenant? && bcc_addresses.size > BCC_LIMIT
+    raise TooManyBcc, submitter.account_id if Wabosign.multitenant? && bcc_addresses.size > BCC_LIMIT
 
     bcc_addresses.each do |to|
       next if is_sent_to_user && to == user.email

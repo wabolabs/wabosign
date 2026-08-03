@@ -50,10 +50,10 @@ module Templates
   def shared(current_user)
     account = current_user.account
 
-    return Template.none if Docuseal.multitenant? ? !account.testing? : !account.linked_account_account
+    return Template.none if Wabosign.multitenant? ? !account.testing? : !account.linked_account_account
 
     shared_account_ids = [current_user.account_id]
-    shared_account_ids << TemplateSharing::ALL_ID if !Docuseal.multitenant? && !account.testing?
+    shared_account_ids << TemplateSharing::ALL_ID if !Wabosign.multitenant? && !account.testing?
 
     exists_access = TemplateAccess.where(TemplateAccess.arel_table[:template_id].eq(Template.arel_table[:id]))
                                   .select(1).arel.exists
@@ -63,7 +63,7 @@ module Templates
   end
 
   def search(current_user, templates, keyword)
-    if Docuseal.fulltext_search?
+    if Wabosign.fulltext_search?
       fulltext_search(current_user, templates, keyword)
     else
       plain_search(templates, keyword)
@@ -73,7 +73,7 @@ module Templates
   def search_shared(current_user, templates, keyword)
     return templates if keyword.blank?
 
-    if Docuseal.fulltext_search?
+    if Wabosign.fulltext_search?
       templates.where(
         id: SearchEntry.where(record_type: 'Template')
                        .where(account_id: current_user.account.linked_account_account&.account_id)

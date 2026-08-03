@@ -34,7 +34,7 @@ module Submissions
       bold_italic: FONT_BOLD_NAME
     }.freeze
 
-    SIGN_REASON = 'Signed with DocuSeal.com'
+    SIGN_REASON = 'Signed with WaboSign.com'
 
     RTL_REGEXP = TextUtils::RTL_REGEXP
 
@@ -248,7 +248,7 @@ module Submissions
             next if e.is_a?(Integer) || e.is_a?(Symbol) || e.is_a?(HexaPDF::PDFArray)
 
             e.present? && e[:A] && !e[:A].is_a?(HexaPDF::PDFArray) &&
-              e[:A][:URI].to_s.starts_with?('file:///docuseal_field')
+              e[:A][:URI].to_s.starts_with?('file:///wabosign_field')
           end || page[:Annots]
 
           width = page.box.width
@@ -533,7 +533,7 @@ module Submissions
                 if with_file_links
                   ActiveStorage::Blob.proxy_url(attachment.blob, expires_at: file_links_expire_at)
                 else
-                  r.submissions_preview_url(submission.slug, **Docuseal.default_url_options)
+                  r.submissions_preview_url(submission.slug, **Wabosign.default_url_options)
                 end
 
               page[:Annots] << pdf.add(
@@ -757,7 +757,7 @@ module Submissions
 
       pdf.trailer.info[:Creator] = info_creator
 
-      if Docuseal.pdf_format == 'pdf/a-3b'
+      if Wabosign.pdf_format == 'pdf/a-3b'
         pdfa_listener = pdf.task(:pdfa, level: '3b')
         pdf.config['font.map'] = PDFA_FONT_MAP
       end
@@ -1014,7 +1014,7 @@ module Submissions
       reason_name = submitter.email || submitter.name || submitter.phone
 
       config =
-        if Docuseal.multitenant?
+        if Wabosign.multitenant?
           AccountConfig.where(account: submitter.account, key: AccountConfig::ESIGNING_PREFERENCE_KEY)
                        .first_or_initialize(value: 'single')
         else
@@ -1033,7 +1033,7 @@ module Submissions
     end
 
     def info_creator
-      "#{Docuseal.product_name} (#{Docuseal::PRODUCT_URL})"
+      "#{Wabosign.product_name} (#{Wabosign::PRODUCT_URL})"
     end
 
     def detached_signature?(_submitter)

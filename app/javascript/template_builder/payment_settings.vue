@@ -193,7 +193,7 @@
       >
         <a
           class="block link text-center text-xs"
-          href="https://www.docuseal.com/blog/accept-payments-and-request-signatures-with-ease"
+          href="https://www.wabosign.com/blog/accept-payments-and-request-signatures-with-ease"
           target="_blank"
           data-turbo="false"
         >{{ t('learn_more') }}</a>

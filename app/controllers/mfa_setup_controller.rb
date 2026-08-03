@@ -22,7 +22,7 @@ class MfaSetupController < ApplicationController
     else
       RateLimit.call("mfa-setup-otp-#{current_user.id}", limit: 5, ttl: 5.minutes, enabled: true)
 
-      @provision_url = current_user.otp_provisioning_uri(current_user.email, issuer: Docuseal.product_name)
+      @provision_url = current_user.otp_provisioning_uri(current_user.email, issuer: Wabosign.product_name)
 
       @error_message = I18n.t('code_is_invalid')
 
@@ -53,6 +53,6 @@ class MfaSetupController < ApplicationController
 
     current_user.save!
 
-    @provision_url = current_user.otp_provisioning_uri(current_user.email, issuer: Docuseal.product_name)
+    @provision_url = current_user.otp_provisioning_uri(current_user.email, issuer: Wabosign.product_name)
   end
 end

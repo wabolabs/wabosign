@@ -58,7 +58,7 @@ class SubmittersController < ApplicationController
 
   def maybe_resend_email_sms(submitter, params)
     if params[:send_email] == '1' && submitter.email.present?
-      is_sent_recently = Docuseal.multitenant? &&
+      is_sent_recently = Wabosign.multitenant? &&
                          EmailEvent.exists?(email: submitter.email,
                                             tag: %w[submitter_invitation submitter_view_invitation],
                                             emailable: submitter,

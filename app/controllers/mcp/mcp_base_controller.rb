@@ -23,7 +23,7 @@ module Mcp
     private
 
     def default_url_options
-      Docuseal.default_url_options
+      Wabosign.default_url_options
     end
 
     def mcp_body
@@ -55,7 +55,7 @@ module Mcp
     end
 
     def verify_mcp_enabled!
-      return if Docuseal.multitenant?
+      return if Wabosign.multitenant?
 
       return if AccountConfig.exists?(account_id: current_user.account_id,
                                       key: AccountConfig::ENABLE_MCP_KEY,

@@ -221,7 +221,7 @@ export default {
   },
   computed: {
     modalContainerEl () {
-      return this.$el.getRootNode().querySelector('#docuseal_modal_container')
+      return this.$el.getRootNode().querySelector('#wabosign_modal_container')
     },
     selectedFields () {
       return this.selectedAreasRef.value.map((area) => {

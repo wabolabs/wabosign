@@ -216,7 +216,7 @@ export default {
       return `/templates/${this.templateId}/documents`
     },
     modalContainerEl () {
-      return this.$el.getRootNode().querySelector('#docuseal_modal_container')
+      return this.$el.getRootNode().querySelector('#wabosign_modal_container')
     }
   },
   mounted () {
