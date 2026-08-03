@@ -4,7 +4,7 @@ module Abilities
   module TemplateConditions
     module_function
 
-    def collection(user)
+    def collection(user, **)
       Template.where(account_id: user.account_id)
     end
 
