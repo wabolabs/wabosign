@@ -29,7 +29,12 @@ git config rerere.enabled true
 git config rerere.autoupdate true
 
 echo "=== Fetching $UPSTREAM_REMOTE ==="
-git fetch "$UPSTREAM_REMOTE" --tags
+# Fetch only master + the requested tag, not --tags. WaboSign's own release
+# tags (1.0.0, 1.1.0, ...) now collide by name with DocuSeal's early-history
+# tags of the same name, so a blanket `--tags` fetch is rejected outright
+# (git refuses to clobber a local tag with a different upstream object at the
+# same name) and aborts the whole sync under `set -e`.
+git fetch "$UPSTREAM_REMOTE" master "refs/tags/$TAG:refs/tags/$TAG"
 
 # Record the commit at the tag so we can verify later
 TAG_COMMIT="$(git rev-parse --verify "$TAG^{commit}" 2>/dev/null || true)"
