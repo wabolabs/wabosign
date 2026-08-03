@@ -42,3 +42,6 @@ dump.rdb
 # Runtime lock files / local dev state — machine-specific, not source
 .claude/scheduled_tasks.lock
 pg_data/
+
+# Local-only dev/testing scratch (e.g. the manual-review docker-compose stack)
+/local/
