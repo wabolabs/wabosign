@@ -17,6 +17,9 @@ module Wabosign
   ENQUIRIES_URL = "#{PRODUCT_URL}/enquiries".freeze
   DISCORD_URL = 'https://discord.gg/qygYCDGck9'
   CHATGPT_URL = "#{PRODUCT_URL}/chat".freeze
+  # No CONSOLE_URL/CLOUD_URL/CDN_URL: those point at DocuSeal's own paid Console/
+  # Cloud SaaS upstream. WaboSign has no such service, so the freed placeholders
+  # (see fork_invariants.yml) never reference them.
 
   CERTS = JSON.parse(ENV.fetch('CERTS', '{}'))
   TIMESERVER_URL = ENV.fetch('TIMESERVER_URL', nil)

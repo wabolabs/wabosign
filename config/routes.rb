@@ -36,7 +36,7 @@ Rails.application.routes.draw do
     resources :submitter_email_clicks, only: %i[create]
     resources :submitter_form_views, only: %i[create]
     resources :submitters, only: %i[index show update]
-    resources :submissions, only: %i[index show create destroy] do
+    resources :submissions, only: %i[index show create update destroy] do
       resources :documents, only: %i[index], controller: 'submission_documents'
       collection do
         resources :init, only: %i[create], controller: 'submissions'
@@ -95,6 +95,7 @@ Rails.application.routes.draw do
     resource :templates_upload, only: %i[show], path: 'new'
   end
   resources :templates_archived, only: %i[index], path: 'templates/archived'
+  resources :templates_shared, only: %i[index], path: 'templates/shared'
   resources :folders, only: %i[show edit update destroy], controller: 'template_folders'
   resources :template_sharings_testing, only: %i[create]
   resources :templates, only: %i[index], controller: 'templates_dashboard'
@@ -103,6 +104,9 @@ Rails.application.routes.draw do
     resources :clone, only: %i[new create], controller: 'templates_clone'
     resource :debug, only: %i[show], controller: 'templates_debug' if Rails.env.development?
     resources :documents, only: %i[index create], controller: 'template_documents'
+    resources :documents_modify, only: %i[create], controller: 'template_documents_modify'
+    resources :documents_page_objects, only: %i[index], controller: 'template_documents_page_objects'
+    resources :documents_crop, only: %i[index create], controller: 'template_documents_crop'
     resources :clone_and_replace, only: %i[create], controller: 'templates_clone_and_replace'
     resources :detect_fields, only: %i[create], controller: 'templates_detect_fields' unless Wabosign.multitenant?
     resources :restore, only: %i[create], controller: 'templates_restore'
@@ -179,6 +183,8 @@ Rails.application.routes.draw do
     resources :send_sms, only: %i[create], controller: 'submitters_send_sms'
   end
 
+  resources :settings, only: %i[index]
+
   scope '/settings', as: :settings do
     unless Wabosign.multitenant?
       resources :storage, only: %i[index create], controller: 'storage_settings'
@@ -194,7 +200,7 @@ Rails.application.routes.draw do
       resources :api, only: %i[index create], controller: 'api_settings'
       resource :reveal_access_token, only: %i[show create], controller: 'reveal_access_token'
     end
-    resources :email, only: %i[index create], controller: 'email_smtp_settings'
+    resources :email, only: %i[index create destroy], controller: 'email_smtp_settings'
     resources :sso, only: %i[index create], controller: 'sso_settings'
     resources :notifications, only: %i[index create], controller: 'notifications_settings'
     resource :esign, only: %i[show create new update destroy], controller: 'esign_settings'

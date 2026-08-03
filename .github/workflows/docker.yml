@@ -47,7 +47,9 @@ jobs:
 
     - name: Create .version file
       if: github.ref_type == 'tag'
-      run: echo ${{ github.ref_name }} > .version
+      env:
+        REF_NAME: ${{ github.ref_name }}
+      run: echo "$REF_NAME" > .version
 
     - name: Login to GitHub Container Registry
       if: github.event_name != 'pull_request'
