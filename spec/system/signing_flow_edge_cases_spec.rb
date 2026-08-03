@@ -30,6 +30,8 @@ RSpec.describe 'Signing Flow Edge Cases' do
     end
 
     it 'allows the second signer to fill after the first completes' do
+      second_submitter
+
       visit submit_form_path(slug: first_submitter.slug)
       fill_in 'First Name', with: 'Alice'
       find('#submit_form_button').click

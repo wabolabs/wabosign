@@ -49,6 +49,7 @@ describe 'Additional API Endpoints' do
         content_type: 'application/pdf'
       )
       ActiveStorage::Attachment.create!(blob:, name: :documents, record: submitter)
+      submission.update!(completed_at: submitter.completed_at)
 
       get "/api/submissions/#{submission.id}/documents", headers: { 'x-auth-token': token }
 
@@ -79,6 +80,7 @@ describe 'Additional API Endpoints' do
       submission = create(:submission, template:, created_by_user: author)
       create(:submitter, submission:, uuid: template.submitters.first['uuid'],
                          account:, completed_at: Time.current)
+      submission.update!(completed_at: Time.current)
 
       get '/api/events/submission/completed', headers: { 'x-auth-token': token }
 
