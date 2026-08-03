@@ -4,6 +4,41 @@ All notable changes to WaboSign are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] — 2026-08-03
+
+Feature and upstream-sync release. Brings the fork from upstream DocuSeal 3.0.2 to
+**3.1.7** (161 upstream commits), carrying the template documents editor, mobile-first
+settings and filters, view-only parties, the new submission-level `completed_at`
+model, and the paywall-free MCP/SMTP/SSO surfaces that resurfaced in the merge.
+
+### Added
+- **Template documents editor** — crop, redact, and replace document pages from the template builder, including touchscreen redact/crop, dynamic documents, and a Google Drive "replace" option.
+- **Mobile-first settings** — settings navigation, filters, and modals now render as pages on small screens.
+- **View-only parties** — recipients can be marked view-only and sent a read-only copy instead of a signing invitation.
+- **HTML email editor** — compose invitation emails with rich HTML and edit the message per group of 10 parties.
+- **Submission `completed_at` model** — completion state is now tracked on the submission itself (populated when the last non-viewer submitter completes) rather than derived on the fly from submitters.
+- **"Completed at" signature timestamp** — new `with_signature_id_completed_at` account config stamps the signature ID with the submitter's completion time instead of attachment creation time.
+- **SMTP reset action** — reset configured SMTP settings from `/settings/email`.
+- **Shared-templates index** (`templates/shared`) and `GET /api/events/submission/:type` submission-events endpoint, both synced from upstream.
+
+### Changed
+- Gemfile.lock regenerated against the updated dependency set (Rails 8.1.3.1, sqlite3 2.9.5, nokogiri 1.19.4, oj 3.17.5) via a Ruby 4.0.5 container — the host toolchain can no longer load this Gemfile.
+- Signing-form and template-builder JS refreshed from upstream (signature steps, area clamping, cmd+scroll zoom, redact/crop).
+- All upstream Pro/Console/Plans gates that resurfaced in the merge (SMS, bulk-send, embedding, logo upload, reminders, SSO, user-role picker, AATL trusted-signature) were stripped back out, consistent with fork policy.
+
+### Fixed
+- [bin/sync-upstream](bin/sync-upstream) — `git fetch upstream --tags` failed once WaboSign's own 1.x release tags collided with DocuSeal's old tags of the same name; the fetch now targets just the tag being synced.
+- [bin/rebrand-sync](bin/rebrand-sync) — preserved the literal `DocuSeal <lang> v` SDK user-agent regex in [lib/detect_browser_device.rb](lib/detect_browser_device.rb) (published `@docuseal/*` clients send it) and deny-listed [.githooks/pre-push](.githooks/pre-push), whose prose names the upstream repo it blocks.
+- [lib/ability.rb](lib/ability.rb) — pre-existing `ArgumentError` in the Viewer-role grant: `TemplateConditions.collection(user, ability: :read)` was called with a keyword the method never accepted.
+- [Dockerfile.test](Dockerfile.test) — added the `liblept5` system dependency upstream 3.1.7's `lib/leptonica.rb` requires at boot.
+- CI — RSpec fixtures updated for the new `submission.completed_at` model (`api_missing_endpoints` documents/events endpoints, second-signer system spec); Brakeman ignore refreshed (swapped an obsolete entry for the weak-confidence false positive on the MCP instructions block).
+
+### Notes
+- Released image: `ghcr.io/wabolabs/wabosign:1.6.0` (also tagged `:latest`).
+- Sync reference tag: `wabosign-synced-with-3.1.7`.
+
+[1.6.0]: https://github.com/wabolabs/wabosign/releases/tag/1.6.0
+
 ## [1.5.0] — 2026-06-05
 
 Fork-hardening and security release. Consolidates the upstream-merge guardrails
