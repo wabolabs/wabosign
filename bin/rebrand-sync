@@ -69,7 +69,12 @@ DENY_PATHS = Set.new([
   'lib/wabosign.rb',
   # Encrypted-config migration matches the literal upstream string to find
   # rows to rewrite; sweeping would silently neuter it.
-  'db/migrate/20260515183000_rename_docuseal_aatl_cert.rb'
+  'db/migrate/20260515183000_rename_docuseal_aatl_cert.rb',
+  # Fork push guard: its prose deliberately names the upstream org/repo it
+  # blocks pushes to ("docusealco/docuseal"), not this fork — sweeping it
+  # inverts the message's meaning even though the actual match pattern
+  # (*docusealco/*) already survives via a different mechanism.
+  '.githooks/pre-push'
 ]).freeze
 
 DENY_PREFIXES = [
@@ -136,7 +141,11 @@ PRESERVE = {
   'DocuSeal LLC'                            => ' SENTINEL0F ',
   'DocuSeal, LLC'                           => ' SENTINEL10 ',
   # i18n key (not value) for AGPL credit
-  'based_on:'                               => ' SENTINEL11 '
+  'based_on:'                               => ' SENTINEL11 ',
+  # SDK user-agent sniffing: published @docuseal/* client SDKs (Ruby gem,
+  # Python/PHP/Java/C#/JS/Go/CLI) send a literal "DocuSeal <lang> v..." UA
+  # string we don't control, so the detector regex must keep matching it.
+  'DocuSeal (?<sdk>Ruby|Python|PHP|Java|C#|JS|Go|CLI) v' => ' SENTINEL12 '
 }.freeze
 
 RULES = [

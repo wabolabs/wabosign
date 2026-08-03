@@ -108,7 +108,10 @@ ALLOW_PATTERNS = [
   # ENV variable names (uppercase)
   %r{DOCUSEAL_API_KEY},
   # github.com/docusealco URLs (upstream binary/ repo references)
-  %r{github\.com/docusealco}
+  %r{github\.com/docusealco},
+  # SDK user-agent sniffing: the published @docuseal/* client SDKs send a
+  # literal "DocuSeal <lang> v..." UA string we don't control.
+  %r{DocuSeal \(\?<sdk>}
 ].freeze
 
 def deny_listed?(rel)
