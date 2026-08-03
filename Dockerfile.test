@@ -5,6 +5,7 @@ RUN apt-get update -qq && \
       build-essential \
       libpq-dev \
       libvips-dev \
+      liblept5 \
       libyaml-dev \
       shared-mime-info \
       wget \
